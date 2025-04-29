@@ -12,10 +12,10 @@ import {
 
 import { useRef, useState } from "react";
 
-// Define the item type including optional target
+// 1. Define the item type including optional target - CHANGE HERE
 type DockItem = {
   title: string;
-  icon: React.ReactNode;
+  icon: React.ReactElement; // Changed from React.ReactNode
   href: string;
   target?: string;
 };
@@ -142,7 +142,7 @@ function IconContainer({
 }: {
   mouseX: MotionValue;
   title: string;
-  icon: React.ReactNode;
+  icon: React.ReactElement; // This type is correct
   href: string;
   target?: string;
 }) {
@@ -167,6 +167,7 @@ function IconContainer({
 
   const [hovered, setHovered] = useState(false);
 
+
   return (
     <a href={href} target={target} rel={target === "_blank" ? "noopener noreferrer" : undefined}>
       <motion.div
@@ -176,15 +177,15 @@ function IconContainer({
         onMouseLeave={() => setHovered(false)}
         className="relative flex aspect-square items-center justify-center rounded-full bg-neutral-800"
       >
+        {/* ... AnimatePresence ... */}
         <AnimatePresence>
           {hovered && (
             <motion.div
-              initial={{ opacity: 0, y: 8, x: "-50%" }} // Start slightly below
+              initial={{ opacity: 0, y: 8, x: "-50%" }}
               animate={{ opacity: 1, y: 0, x: "-50%" }}
-              exit={{ opacity: 0, y: 8, x: "-50%" }} // Exit slightly below
+              exit={{ opacity: 0, y: 8, x: "-50%" }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              // Tooltip styling - position ABOVE the icon
-              className="absolute -top-10 left-1/2 w-fit whitespace-nowrap rounded-md border border-neutral-700 bg-neutral-800 px-2 py-1 text-xs font-medium text-neutral-200 shadow-lg" // Changed top-full mt-2 back to -top-10
+              className="absolute -top-10 left-1/2 w-fit whitespace-nowrap rounded-md border border-neutral-700 bg-neutral-800 px-2 py-1 text-xs font-medium text-neutral-200 shadow-lg"
             >
               {title}
             </motion.div>
@@ -194,7 +195,10 @@ function IconContainer({
           style={{ width: widthIcon, height: heightIcon }}
           className="flex items-center justify-center"
         >
-          {React.cloneElement(icon as React.ReactElement, { className: "h-full w-full text-neutral-300" })}
+          {/* Apply type assertion to the props object */}
+          {React.cloneElement(icon, {
+             className: "h-full w-full text-neutral-300"
+          } as React.HTMLAttributes<HTMLElement> )}
         </motion.div>
       </motion.div>
     </a>
