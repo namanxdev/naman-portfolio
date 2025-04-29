@@ -1,7 +1,6 @@
 import React from "react";
 import { FloatingDock } from "@/components/ui/floating-dock";
 import {
-  IconBrandGithub,
   IconBrandX, // Assuming this is Twitter/X
   IconHome,
   IconCode, // For Skills
