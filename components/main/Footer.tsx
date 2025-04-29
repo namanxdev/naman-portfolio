@@ -32,7 +32,8 @@ const socialLinks = [
 const Footer = () => {
   return (
     // Add backdrop blur and background transparency
-    <footer className="relative z-20 w-full bg-black/80 backdrop-blur-sm py-12 px-6 text-center text-neutral-400"> {/* Changed bg-black to bg-black/80 and added backdrop-blur-sm */}
+    <footer className="relative z-20 w-full bg-black/80 backdrop-blur-sm py-12 px-6 text-center text-neutral-400"
+    id='socials'> {/* Changed bg-black to bg-black/80 and added backdrop-blur-sm */}
       <div className="container mx-auto flex flex-col items-center gap-8">
 
         {/* Social Media Links - Enhanced Styling */}

@@ -27,9 +27,9 @@ const Skills = () => {
   }, []);
 
   return (
-    <div className="w-full pt-10">
+    <div className="w-full pt-10" >
       <SkillHead/>  
-      <div className="-mt-8 md:-mt-16 lg:-mt-24">
+      <div className="-mt-8 md:-mt-16 lg:-mt-24" id='skills'>
         {isMobile ? <SkillsBeamMobile /> : <SkillsShowcase />}
       </div>
     </div>
