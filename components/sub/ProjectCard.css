@@ -1,0 +1,23 @@
+.card-wrapper::before {
+  content: "";
+  position: absolute;
+  left: -25%;
+  top: -25%;
+  height: 150%;
+  width: 150%;
+  background: conic-gradient(
+    transparent 0deg,
+    rgba(var(--accent-color), 1) 10deg, /* Use CSS variable */
+    transparent 40deg
+  );
+  border-radius: 10px;
+  animation: border-spin 7s linear infinite;
+  z-index: 0;
+}
+
+/* Border Animation */
+@keyframes border-spin {
+  100% {
+    transform: rotate(-360deg);
+  }
+}
