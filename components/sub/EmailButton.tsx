@@ -21,7 +21,7 @@ export function EmailButton() {
   return (
     <HoverBorderGradient
       containerClassName="rounded-full"
-      as="button"
+      
       className="bg-black text-white flex items-center space-x-2 px-4 py-2"
       onClick={handleCopy}
     >

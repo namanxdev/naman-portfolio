@@ -1,103 +1,97 @@
 "use client";
-import React, { useState, useEffect, useRef, ElementType, ComponentPropsWithoutRef } from "react";
-
+import React, { useState, useEffect, ButtonHTMLAttributes } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 type Direction = "TOP" | "LEFT" | "BOTTOM" | "RIGHT";
 
-type HoverBorderGradientProps<T extends ElementType = "button"> =
-  React.PropsWithChildren<{
-    as?: T;
-    containerClassName?: string;
-    className?: string;
-    duration?: number;
-    clockwise?: boolean;
-  }> & Omit<ComponentPropsWithoutRef<T>, "as" | "className" | "children">;
+export interface HoverBorderGradientProps
+  extends ButtonHTMLAttributes<HTMLButtonElement> {
+  /** outer wrapper classes */
+  containerClassName?: string;
+  /** inner content classes */
+  className?: string;
+  /** rotation interval in seconds */
+  duration?: number;
+  /** direction of rotation */
+  clockwise?: boolean;
+}
 
-export function HoverBorderGradient<T extends ElementType = "button">({
+export function HoverBorderGradient({
   children,
   containerClassName,
   className,
-  as,
   duration = 1,
   clockwise = true,
   ...props
-}: HoverBorderGradientProps<T>) {
-  const Tag = as || "button";
-
-  const [hovered, setHovered] = useState<boolean>(false);
+}: HoverBorderGradientProps) {
+  const [hovered, setHovered] = useState(false);
   const [direction, setDirection] = useState<Direction>("TOP");
 
-  const rotateDirection = (currentDirection: Direction): Direction => {
-    const directions: Direction[] = ["TOP", "LEFT", "BOTTOM", "RIGHT"];
-    const currentIndex = directions.indexOf(currentDirection);
-    const nextIndex = clockwise
-      ? (currentIndex - 1 + directions.length) % directions.length
-      : (currentIndex + 1) % directions.length;
-    return directions[nextIndex];
+  const rotateDirection = (dir: Direction): Direction => {
+    const map: Direction[] = ["TOP", "LEFT", "BOTTOM", "RIGHT"];
+    const idx = map.indexOf(dir);
+    const next = clockwise
+      ? (idx - 1 + map.length) % map.length
+      : (idx + 1) % map.length;
+    return map[next];
   };
 
   const movingMap: Record<Direction, string> = {
-    TOP: "radial-gradient(20.7% 50% at 50% 0%, hsl(0, 0%, 100%) 0%, rgba(255, 255, 255, 0) 100%)",
-    LEFT: "radial-gradient(16.6% 43.1% at 0% 50%, hsl(0, 0%, 100%) 0%, rgba(255, 255, 255, 0) 100%)",
-    BOTTOM:
-      "radial-gradient(20.7% 50% at 50% 100%, hsl(0, 0%, 100%) 0%, rgba(255, 255, 255, 0) 100%)",
-    RIGHT:
-      "radial-gradient(16.2% 41.199999999999996% at 100% 50%, hsl(0, 0%, 100%) 0%, rgba(255, 255, 255, 0) 100%)",
+    TOP: "radial-gradient(20% 50% at 50% 0%, white 0%, transparent 100%)",
+    LEFT: "radial-gradient(20% 50% at 0% 50%, white 0%, transparent 100%)",
+    BOTTOM: "radial-gradient(20% 50% at 50% 100%, white 0%, transparent 100%)",
+    RIGHT: "radial-gradient(20% 50% at 100% 50%, white 0%, transparent 100%)",
   };
 
   const highlight =
-    "radial-gradient(75% 181.15942028985506% at 50% 50%, #3275F8 0%, rgba(255, 255, 255, 0) 100%)";
+    "radial-gradient(75% 180% at 50% 50%, #3275F8 0%, transparent 100%)";
 
   useEffect(() => {
     if (!hovered) {
-      const interval = setInterval(() => {
-        setDirection((prevState) => rotateDirection(prevState));
-      }, duration * 1000);
-      return () => clearInterval(interval);
+      const id = setInterval(
+        () => setDirection((d) => rotateDirection(d)),
+        duration * 1000
+      );
+      return () => clearInterval(id);
     }
   }, [hovered, duration, clockwise]);
 
   return (
-    <Tag
-      onMouseEnter={(event) => {
-        setHovered(true);
-      }}
+    <button
+      onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className={cn(
-        "relative flex rounded-full border content-center bg-black/20 hover:bg-black/10 transition duration-500  items-center flex-col flex-nowrap gap-10 h-min justify-center overflow-visible p-px decoration-clone w-fit",
+        "relative flex rounded-full p-px overflow-visible w-fit h-min items-center justify-center",
         containerClassName
       )}
       {...props}
     >
+      {/* inner black content */}
       <div
         className={cn(
-          "w-auto text-white z-10 bg-black px-4 py-2 rounded-[inherit]",
+          "z-10 bg-black text-white px-4 py-2 rounded-full",
           className
         )}
       >
         {children}
       </div>
+
+      {/* animated gradient border behind */}
       <motion.div
-        className={cn(
-          "flex-none inset-0 overflow-hidden absolute z-0 rounded-[inherit]"
-        )}
-        style={{
-          filter: "blur(2px)",
-          position: "absolute",
-          width: "100%",
-          height: "100%",
-        }}
+        className="absolute inset-0 z-0 rounded-full overflow-hidden"
+        style={{ filter: "blur(2px)" }}
         initial={{ background: movingMap[direction] }}
         animate={{
           background: hovered
             ? [movingMap[direction], highlight]
             : movingMap[direction],
         }}
-        transition={{ ease: "linear", duration: duration ?? 1 }}
+        transition={{ duration, ease: "linear" }}
       />
-      <div className="bg-black absolute z-1 flex-none inset-[2px] rounded-[100px]" />
-    </Tag>
+
+      {/* inner mask to hide center */}
+      <div className="absolute inset-[2px] z-0 bg-black rounded-full" />
+    </button>
   );
 }
