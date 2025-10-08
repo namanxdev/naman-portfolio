@@ -21,7 +21,7 @@ const socialLinks = [
   },
   {
     name: 'Resume',
-    url: 'https://drive.google.com/file/d/1_f_q_2MLN7wCZ4oZu8mZQwkAR7Oc1tFW/view?usp=drive_link',
+    url: 'https://drive.google.com/file/d/1fHaNPJMnahXa1aYJNGxEc_mrgDZrMzRg/view?usp=sharing',
     svgPath: "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z",
     svgPath2: "M14 2v6h6M16 13H8M16 17H8M10 9H8"
   },
